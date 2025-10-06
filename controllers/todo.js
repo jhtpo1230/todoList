@@ -37,7 +37,7 @@ exports.updateTodo = async (req, res) => {
         });
     } else {
         res.status(201).json({
-            message : `${id} 번째 todoList가 ${todoContent} 로 변경되었습니다 !`
+            message : `${id} 번째 todoList가 [ ${todoContent} ]로 변경되었습니다 !`
         })
     }
 }
