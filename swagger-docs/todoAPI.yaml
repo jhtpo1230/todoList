@@ -1,0 +1,41 @@
+paths:
+  /todo:
+    post:
+      summary: Todo 등록
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todoContent:
+                  type: string
+      responses:
+        '201':
+          description: 등록 성공
+        '400':
+          description: 등록 실패
+  /todo/{id}:
+    put:
+      summary: Todo 수정
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todoContent:
+                  type: string
+      responses:
+        '200':
+          description: 수정 성공
+        '400':
+          description: 수정 실패 (todoContent가 없음)
