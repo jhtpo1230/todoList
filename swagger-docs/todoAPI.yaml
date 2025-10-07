@@ -52,3 +52,17 @@ paths:
           description: 삭제 성공
         '400':
           description: 삭제 실패
+  /todo/{id}/complete:
+    patch:
+      summary: Todo 완료/미완료
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: todo 완료/미완료 성공
+        '400':
+          description: todo 완료/미완료 실패
