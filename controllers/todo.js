@@ -9,15 +9,15 @@ exports.createTodo = async (req, res) => {
         [todoContent]
     );
 
-    if (todoContent) {
+    if (todoContent.trim() === "") {
+        res.status(400).json({
+            error: 'todoContent is null !!'
+        });
+    } else {
         res.status(201).json({
             id: insertSQL_TodoContent.insertId,
             content: todoContent,
             todoComplete: false
-        })
-    } else {
-        res.status(400).json({
-            error: 'todoContent is undefined !!'
         });
     }
 }
@@ -36,13 +36,28 @@ exports.updateTodo = async (req, res) => {
             error: 'todoContent is null !!'
         });
     } else {
-        res.status(201).json({
-            message : `${id} 번째 todoList가 [ ${todoContent} ]로 변경되었습니다 !`
+        res.status(200).json({
+            message: `${id} 번째 todoList가 [ ${todoContent} ]로 변경되었습니다 !`
         })
     }
 }
 
 // todo 삭제 API : DELETE
+exports.deleteTodo = async (req, res) => {
+    const { id } = req.params;
+    const [selectedTodoContent] = await pool.query(
+        'SELECT todoContent FROM todo WHERE id = ?',
+        [id]
+    )
+    const [deleteSQL_TodoContent] = await pool.query(
+        'DELETE FROM todo WHERE id = ?',
+        [id]
+    );
+
+    res.status(200).json({
+        message: `todoList [ ${todoContent_BeforeDelete} ]가 삭제되었습니다 !`
+    })
+}
 
 // todo 완료 API : FATCH
 

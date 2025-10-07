@@ -39,3 +39,16 @@ paths:
           description: 수정 성공
         '400':
           description: 수정 실패 (todoContent가 없음)
+    delete:
+      summary: Todo 삭제
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 삭제 성공
+        '400':
+          description: 삭제 실패
