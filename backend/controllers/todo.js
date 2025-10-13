@@ -6,8 +6,10 @@ exports.getTodos = async (req, res) => {
         'SELECT * FROM todo'
     );
 
-    if (todos == undefined) {
-        res.status(400).json();
+    if (todos.length === 0) {
+        res.status(404).json({
+            message : "등록된 todo가 없습니다."
+        });
     } else {
         res.status(200).json(todos);
     }
