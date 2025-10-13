@@ -20,4 +20,4 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 module.exports = { swaggerUi, specs };
-console.log('✅ Swagger spec loaded:', Object.keys(specs));
+console.log('Swagger spec loaded:', Object.keys(specs));
