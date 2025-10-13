@@ -20,7 +20,7 @@ export default function TodoContainer() {
     useEffect(() => {
         const fetchTodos = async () => {
             try {
-                const data = await getTodos(); // ✅ 서버에서 목록 불러오기
+                const data = await getTodos(); // 서버에서 목록 불러오기
                 setTodos(data); // 응답 받은 데이터로 상태 업데이트
             } catch (err) {
                 console.error("할 일 불러오기 실패:", err);
@@ -31,9 +31,9 @@ export default function TodoContainer() {
 
     const handleAdd = async (title) => {
         try {
-            await addTodo(title); // ✅ 서버에 새 todo 추가 요청
+            await addTodo(title); //서버에 새 todo 추가 요청
             const updated = await getTodos(); // ✅ DB의 최신 상태 불러오기
-            setTodos(updated); // ✅ React 화면 업데이트
+            setTodos(updated); //React 화면 업데이트
         } catch (err) {
             console.error("할 일 추가 실패:", err);
         }
