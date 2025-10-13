@@ -6,18 +6,18 @@ paths:
         '200':
           description: 전체 조회 성공
           content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  todoContent:
-                    type: string
-                  todoCompleted:
-                    type: boolean
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    todoContent:
+                      type: string
+                    todoCompleted:
+                      type: boolean
         '400':
           description: 전체 조회 실패
     post:
@@ -86,3 +86,23 @@ paths:
           description: todo 완료/미완료 성공
         '400':
           description: todo 완료/미완료 실패
+
+  /user:
+    post:
+      summary: user 회원가입
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login_id:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: 회원가입 성공
+        '400':
+          description: 회원가입 실패
