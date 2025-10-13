@@ -4,11 +4,11 @@
 > 로그인 · 회원가입 기능이 포함된 **개인/팀용 To-Do 관리 웹페이지**  
 
 ---
-## 🧩 주요 기능
+## 💡 주요 기능
 
-- ✅ **할 일 등록 / 수정 / 삭제 / 완료 표시**
-- 👥 **로그인 / 회원가입**
-- 🧑‍🤝‍🧑 **팀 구성 및 팀원 초대 / 팀별 To-Do 관리 페이지**
+-  **할 일 등록 / 수정 / 삭제 / 완료 표시**
+-  **로그인 / 회원가입**
+-  **팀 구성 및 팀원 초대 / 팀별 To-Do 관리 페이지**
 
 ---
 
@@ -16,11 +16,11 @@
 
 | 구분 | 사용 기술 |
 |------|------------|
-| **Frontend** | React, Axios |
-| **Backend** | Node.js (Express), MySQL2 |
-| **DB** | MariaDB |
+| **Frontend** | React + Axios |
+| **Backend** | Node.js + Express + mysql2 |
+| **DB** | MariaDB (Docker 컨테이너) |
 | **환경 변수 관리** | dotenv |
-| **형상 관리** | Git / GitHub / Swagger |
+| **형상 관리** | Git / GitHub |
 
 ---
 
