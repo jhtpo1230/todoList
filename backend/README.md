@@ -36,8 +36,11 @@ node server.js
 ### 🔧 API 기능 (👇 추가 예정 👇)
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
+| `GET`   | `/todo`     | Todo 전체 조회 |
 | `POST`   | `/todo`     | Todo 등록    |
 | `PUT`    | `/todo/:id` | Todo 수정    |
+| `DELETE`   | `/todo/:id`     | Todo 삭제  |
+| `PATCH`   | `/todo/:id/complete`  | Todo 완료/미완료  |
 ---
 ### 🧠 TroubleShooting (👇 추가 예정 👇)
 | 이슈                          | 원인                    | 해결                                              |
