@@ -1,0 +1,14 @@
+/* 전체 레이아웃 */
+.todo-page {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    height: 100vh; /* 화면 전체 높이*/
+    font-family: "Pretendard", sans-serif;
+}
+
+/* 오른쪽 메인 영역 */
+.todo-container {
+    flex: 1;
+    padding: 40px 160px;
+}
