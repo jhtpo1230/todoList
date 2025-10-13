@@ -1,5 +1,25 @@
 paths:
   /todo:
+    get:
+      summary: Todo 전체조회
+      responses:
+        '200':
+          description: 전체 조회 성공
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  todoContent:
+                    type: string
+                  todoCompleted:
+                    type: boolean
+        '400':
+          description: 전체 조회 실패
     post:
       summary: Todo 등록
       requestBody:

@@ -1,5 +1,18 @@
 const pool = require('../db/todoListDB');
 
+// todo 전체 조회 API : GET
+exports.getTodos = async (req, res) => {
+    const [todos] = await pool.query(
+        'SELECT * FROM todo'
+    );
+
+    if (todos == undefined) {
+        res.status(400).json();
+    } else {
+        res.status(200).json(todos);
+    }
+}
+
 // todo 등록 API : POST
 exports.createTodo = async (req, res) => {
     const { todoContent } = req.body;
@@ -76,6 +89,6 @@ exports.todoComplete = async (req, res) => {
     );
 
     res.status(200).json({
-        message: `todoList가 ${check_TodoCompleted===1 ? "완료" : "미완료"}로 설정되었습니다 !`
+        message: `todoList가 ${check_TodoCompleted === 1 ? "완료" : "미완료"}로 설정되었습니다 !`
     });
 }
