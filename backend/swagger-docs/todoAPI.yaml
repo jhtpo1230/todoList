@@ -87,7 +87,7 @@ paths:
         '400':
           description: todo 완료/미완료 실패
 
-  /user:
+  /user/join:
     post:
       summary: user 회원가입
       requestBody:
@@ -106,3 +106,22 @@ paths:
           description: 회원가입 성공
         '400':
           description: 회원가입 실패
+  /user/login:
+    post:
+      summary: user 로그인
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login_id:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: 로그인 성공
+        '400':
+          description: 로그인 실패
