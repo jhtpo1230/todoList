@@ -35,7 +35,7 @@ node server.js
 ---
 ### 🔧 DATABASE ERD (👇 추가 예정 👇)
 
-<img width="780" height="474" alt="image" src="https://github.com/user-attachments/assets/f624ef10-06c0-44f2-b44b-5637d2454ecc" />
+<img width="779" height="463" alt="image" src="https://github.com/user-attachments/assets/f3ab372d-0e47-4697-8d9a-f864194984b7" />
 
 ---
 
