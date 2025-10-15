@@ -1,7 +1,9 @@
 # 🗂️ TodoList
 
 > Express + MySQL 백엔드, React 프론트엔드로 구성된 풀스택 프로젝트로, <br>
-> 로그인 · 회원가입 기능이 포함된 **개인/팀용 To-Do 관리 웹페이지**  
+> 로그인 · 회원가입 기능이 포함된 **개인/팀용 To-Do 관리 웹페이지**
+<img width="936" height="663" alt="image" src="https://github.com/user-attachments/assets/ac9a9488-f80b-4901-9f2c-1d21ee5d88f6" />
+
 
 ---
 ## 💡 주요 기능
