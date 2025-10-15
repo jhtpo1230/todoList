@@ -33,7 +33,13 @@ node server.js
 | **Docker** | DB 컨테이너 실행 및 환경 구성 |
 | **Swagger**           | API 문서화 도구     |
 ---
-### 🔧 API 기능 (👇 추가 예정 👇)
+### 🔧 DATABASE ERD (👇 추가 예정 👇)
+
+<img width="780" height="474" alt="image" src="https://github.com/user-attachments/assets/f624ef10-06c0-44f2-b44b-5637d2454ecc" />
+
+---
+
+### 🔧 TODO API 기능 (👇 추가 예정 👇)
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
 | `GET`   | `/todo`     | Todo 전체 조회 |
@@ -41,6 +47,13 @@ node server.js
 | `PUT`    | `/todo/:id` | Todo 수정    |
 | `DELETE`   | `/todo/:id`     | Todo 삭제  |
 | `PATCH`   | `/todo/:id/complete`  | Todo 완료/미완료  |
+
+### 🔧 USER API 기능 (👇 추가 예정 👇)
+| 메서드      | 경로          | 설명         |
+| -------- | ----------- | ---------- |
+| `POST`   | `/user/join`     | User 회원가입 |
+| `POST`   | `/user/login`    | User 로그인   |
+
 ---
 ### 🧠 TroubleShooting (👇 추가 예정 👇)
 | 이슈                          | 원인                    | 해결                                              |
