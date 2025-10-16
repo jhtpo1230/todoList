@@ -3,10 +3,10 @@ const pool = require('../db/todoListDB');
 // 회원가입 API : POST
 exports.joinUser = async (req, res) => {
     const { login_id, password } = req.body;
-    const [checkUserExist] = await pool.query(
+    const [checkLoginIdExist] = await pool.query(
         'SELECT * FROM user WHERE login_id = ?', login_id
     );
-    if (checkUserExist.length > 0) {
+    if (checkLoginIdExist.length > 0) {
         return res.status(400).json({
             JoinSuccess: false,
             message: "이미 존재하는 ID 입니다."
@@ -27,10 +27,10 @@ exports.joinUser = async (req, res) => {
 // 로그인 API : POST
 exports.loginUser = async (req, res) => {
     const { login_id, password } = req.body;
-    const [checkUserExist] = await pool.query(
+    const [checkLoginIdExist] = await pool.query(
         'SELECT * FROM user WHERE login_id = ?', login_id
     );
-    if (checkUserExist.length === 0) {
+    if (checkLoginIdExist.length === 0) {
         return res.status(400).json({
             loginSuccess: false,
             message: "존재하지 않는 ID 입니다."

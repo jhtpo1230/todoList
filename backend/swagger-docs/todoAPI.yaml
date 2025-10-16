@@ -1,92 +1,4 @@
 paths:
-  /todo:
-    get:
-      summary: Todo 전체조회
-      responses:
-        '200':
-          description: 전체 조회 성공
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    todoContent:
-                      type: string
-                    todoCompleted:
-                      type: boolean
-        '400':
-          description: 전체 조회 실패
-    post:
-      summary: Todo 등록
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                todoContent:
-                  type: string
-      responses:
-        '201':
-          description: 등록 성공
-        '400':
-          description: 등록 실패
-  /todo/{id}:
-    put:
-      summary: Todo 수정
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                todoContent:
-                  type: string
-      responses:
-        '200':
-          description: 수정 성공
-        '400':
-          description: 수정 실패 (todoContent가 없음)
-    delete:
-      summary: Todo 삭제
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 삭제 성공
-        '400':
-          description: 삭제 실패
-  /todo/{id}/complete:
-    patch:
-      summary: Todo 완료/미완료
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: todo 완료/미완료 성공
-        '400':
-          description: todo 완료/미완료 실패
-
   /user/join:
     post:
       summary: user 회원가입
@@ -125,3 +37,169 @@ paths:
           description: 로그인 성공
         '400':
           description: 로그인 실패
+
+  /users/{userId}/todos:
+    get:
+      summary: 유저의 Todo 전체 조회
+      parameters:
+        - in: path
+          name: userId
+          schema:
+           type: integer
+          required: true
+          description: 조회할 사용자 ID
+      responses:
+        '200':
+         description: 전체 조회 성공
+         content:
+           application/json:
+             schema:
+               type: array
+               items:
+                 type: object
+                 properties:
+                   id:
+                     type: integer
+                   todoContent:
+                     type: string
+                   todoCompleted:
+                     type: boolean
+        404':
+         description: 해당 유저에게 등록된 Todo가 없음
+        500':
+         description: 서버 내부 오류
+
+    post:
+      summary: 유저의 Todo 등록
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: 등록할 사용자 ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todoContent:
+                  type: string
+      responses:
+        '201':
+          description: 등록 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  content:
+                    type: string
+                  todoCompleted:
+                    type: boolean
+        '400':
+          description: 등록 실패 (todoContent가 비어있음)
+        '500':
+          description: 서버 내부 오류
+
+/users/{userId}/todos/{id}:
+  put:
+    summary: 유저의 Todo 수정
+    parameters:
+      - in: path
+        name: userId
+        schema:
+          type: integer
+        required: true
+        description: 사용자 ID
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: 수정할 Todo ID
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              todoContent:
+                type: string
+    responses:
+      '200':
+        description: 수정 성공
+      '400':
+        description: 수정 실패 (todoContent 없음)
+      '500':
+        description: 서버 내부 오류
+
+  delete:
+    summary: 유저의 Todo 삭제
+    parameters:
+      - in: path
+        name: userId
+        schema:
+          type: integer
+        required: true
+        description: 사용자 ID
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: 삭제할 Todo ID
+    responses:
+      '200':
+        description: 삭제 성공
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      '404':
+        description: 삭제 실패 (해당 유저에게 등록된 todo가 없음)
+      '500':
+        description: 서버 내부 오류
+
+/users/{userId}/todos/{id}/complete:
+  patch:
+    summary: 유저의 Todo 완료/미완료 토글
+    parameters:
+      - in: path
+        name: userId
+        schema:
+          type: integer
+        required: true
+        description: 사용자 ID
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: 완료/미완료 상태를 변경할 Todo ID
+    responses:
+      '200':
+        description: todo 완료/미완료 성공
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                todoCompleted:
+                  type: boolean
+      '404':
+        description: todo 완료/미완료 실패 (해당 유저에게 등록된 todo가 없음)          
+      '500':
+        description: 서버 내부 오류

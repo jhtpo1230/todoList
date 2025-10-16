@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const todoRoutes = require('../backend/routes/todo-route');
+const userTodoRoutes = require('./routes/userTodo-route');
 const userRoutes = require('../backend/routes/user-route');
 const { swaggerUi, specs } = require('../backend/swagger/swagger');
 const cors = require('cors');
@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use(cors({origin : 'http://localhost:3000'}));
 
-app.use('/todo', todoRoutes);
+app.use('/users/:userId/todos', userTodoRoutes);
 app.use('/user', userRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(specs));
