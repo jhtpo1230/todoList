@@ -7,7 +7,7 @@ const options = {
         openapi: '3.0.0',
         info: {
             title: 'TodoList API',
-            version: '1.1.0',
+            version: '1.2.0',
             description: 'Todo CRUD API 문서 - userTodo 수정 버전'
         },
         servers: [
