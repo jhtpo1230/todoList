@@ -46,7 +46,7 @@ node server.js
 | `POST`   | `/users/:userId/todos`   | User Todo 등록    |
 | `PUT`    | `/users/:userId/todos/:id` | User Todo 수정    |
 | `DELETE`   | `/users/:userId/todos/:id`     | User Todo 삭제  |
-| `PATCH`   | `/users/:userId/todos/:id/complete`  | User Todo 완료/미완료  |
+| `PATCH`   | `/users/:userId/todos/:id/complete`  | User Todo 완료/미완료 |
 
 ### 🔧 USER API 기능 (👇 추가 예정 👇)
 | 메서드      | 경로          | 설명         |
