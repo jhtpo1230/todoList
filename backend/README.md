@@ -39,14 +39,14 @@ node server.js
 
 ---
 
-### 🔧 TODO API 기능 (👇 추가 예정 👇)
+### 🔧 USER TODO API 기능 (👇 추가 예정 👇)
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
-| `GET`   | `/todo`     | Todo 전체 조회 |
-| `POST`   | `/todo`     | Todo 등록    |
-| `PUT`    | `/todo/:id` | Todo 수정    |
-| `DELETE`   | `/todo/:id`     | Todo 삭제  |
-| `PATCH`   | `/todo/:id/complete`  | Todo 완료/미완료  |
+| `GET`   | `/users/:userId/todos` | User Todo 전체 조회 |
+| `POST`   | `/users/:userId/todos`   | User Todo 등록    |
+| `PUT`    | `/users/:userId/todos/:id` | User Todo 수정    |
+| `DELETE`   | `/users/:userId/todos/:id`     | User Todo 삭제  |
+| `PATCH`   | `/users/:userId/todos/:id/complete`  | User Todo 완료/미완료  |
 
 ### 🔧 USER API 기능 (👇 추가 예정 👇)
 | 메서드      | 경로          | 설명         |
