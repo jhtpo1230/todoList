@@ -5,6 +5,7 @@ export default function TodoItem({ todo, onDelete, onUpdate, onToggle }) {
     const [value, setValue] = useState(todo.title);
 
     const handleUpdate = () => {
+        if (!value.trim()) return; // 수정 후 완료 버튼을 눌렀을 때 공백이면 업데이트 안되게 하는 코드
         onUpdate(todo.id, value);
         setEditing(false);
     };
