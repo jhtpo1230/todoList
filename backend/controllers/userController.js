@@ -56,6 +56,7 @@ exports.loginUser = async (req, res) => {
                 res.status(200).json({
                     JoinSuccess: true,
                     pwSuccess: true,
+                    login_id : login_id,
                     message: `${login_id} 님 환영합니다!`
                 })
             }
