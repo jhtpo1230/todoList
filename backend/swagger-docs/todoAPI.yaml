@@ -35,8 +35,10 @@ paths:
       responses:
         '200':
           description: 로그인 성공
-        '400':
+        '401':
           description: 로그인 실패
+        '500':
+         description: 서버 내부 오류
 
   /users/{userId}/todos:
     get:

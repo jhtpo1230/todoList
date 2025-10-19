@@ -1,4 +1,7 @@
 const pool = require('../db/todoListDB');
+const crypto = require('crypto');
+const jwt = require('jsonWebToken');
+require('dotenv').config();
 
 // 회원가입 API : POST
 exports.joinUser = async (req, res) => {
@@ -13,9 +16,16 @@ exports.joinUser = async (req, res) => {
                 message: "이미 존재하는 ID 입니다."
             });
         } else {
+            const salt = crypto.randomBytes(16).toString("base64");
+
+            const hashedPassword = crypto
+                .pbkdf2Sync(password, salt, 10000, 16, "sha512")
+                .toString("base64");
+
+
             await pool.query(
-                'INSERT INTO user (login_id, password) VALUES (?, ?)',
-                [login_id, password]
+                'INSERT INTO user (login_id, password, salt) VALUES (?, ?, ?)',
+                [login_id, hashedPassword, salt]
             );
 
             res.status(201).json({
@@ -36,30 +46,45 @@ exports.loginUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
         const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', login_id
+            'SELECT * FROM user WHERE login_id = ?', [login_id]
         );
+
         if (checkLoginIdExist.length === 0) {
             return res.status(400).json({
                 loginSuccess: false,
                 message: "존재하지 않는 ID 입니다."
             });
+        };
+
+        const { salt, password: HashedPassword, user_id } = checkLoginIdExist[0];
+
+        const InputPassword = crypto
+            .pbkdf2Sync(password, salt, 10000, 16, "sha512")
+            .toString("base64");
+
+        if (InputPassword !== HashedPassword) {
+            return res.status(401).json({
+                pwSuccess: false,
+                message: "비밀번호가 일치하지 않습니다."
+            });
         } else {
-            const [userInfo] = await pool.query(
-                'SELECT login_id, password, user_id FROM user WHERE login_id=?', login_id
-            );
-            if (userInfo[0].password !== password) {
-                res.status(400).json({
-                    pwSuccess: false,
-                    message: `비밀번호가 틀렸습니다.`
-                })
-            } else {
-                res.status(200).json({
-                    JoinSuccess: true,
-                    pwSuccess: true,
-                    user_id : userInfo[0].user_id,
-                    message: `${login_id} 님 환영합니다!`
-                })
-            }
+            const token = jwt.sign({ user_id: user_id }, process.env.JWT_Token, {
+                expiresIn: "2h",
+                issuer: "KJC"
+            });
+
+            console.log(checkLoginIdExist[0]);  // 전체 객체 로그    
+            console.log(InputPassword)
+            console.log(password)
+            console.log(HashedPassword)
+            console.log(token)
+            return res.status(200).json({
+                JoinSuccess: true,
+                pwSuccess: true,
+                user_id: user_id,
+                token: token,
+                message: `${login_id} 님 환영합니다!`
+            })
         }
     } catch (error) {
         console.error(error);
