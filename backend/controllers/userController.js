@@ -45,7 +45,7 @@ exports.loginUser = async (req, res) => {
             });
         } else {
             const [userInfo] = await pool.query(
-                'SELECT login_id, password FROM user WHERE login_id=?', login_id
+                'SELECT login_id, password, user_id FROM user WHERE login_id=?', login_id
             );
             if (userInfo[0].password !== password) {
                 res.status(400).json({
@@ -56,7 +56,7 @@ exports.loginUser = async (req, res) => {
                 res.status(200).json({
                     JoinSuccess: true,
                     pwSuccess: true,
-                    login_id : login_id,
+                    user_id : userInfo[0].user_id,
                     message: `${login_id} 님 환영합니다!`
                 })
             }
