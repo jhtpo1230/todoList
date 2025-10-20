@@ -1,6 +1,6 @@
 const pool = require('../db/todoListDB');
 const crypto = require('crypto');
-const jwt = require('jsonWebToken');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // 회원가입 API : POST
@@ -8,7 +8,7 @@ exports.joinUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
         const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', login_id
+            'SELECT * FROM user WHERE login_id = ?', [login_id]
         );
         if (checkLoginIdExist.length > 0) {
             return res.status(400).json({
@@ -79,7 +79,7 @@ exports.loginUser = async (req, res) => {
             console.log(HashedPassword)
             console.log(token)
             return res.status(200).json({
-                JoinSuccess: true,
+                loginSuccess: true, // status 상태코드 확인
                 pwSuccess: true,
                 user_id: user_id,
                 token: token,
