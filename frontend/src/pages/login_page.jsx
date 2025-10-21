@@ -20,18 +20,16 @@ export default function LoginPage() {
             const res = await loginUser(login_id, password);
             console.log("로그인 응답:", res);
 
-            if (res.pwSuccess) {
+            if (res.loginSuccess && res.pwSuccess) {
                 alert(`${res.message}`);
                 localStorage.setItem("userId", res.user_id); // 로컬에 저장
-                setUserId(res.login_id); // App.js로 userId 전달
-                //navigate("/todo");
+                localStorage.setItem("token", res.token); // 토큰 저장
                 navigate("/todo", { state: { userId: res.user_id } });
             } else {
-                alert("비밀번호가 올바르지 않습니다.");
+                alert("아이디 또는 비밀번호가 올바르지 않습니다.");
             }
         } catch (err) {
             console.error("로그인 실패:", err);
-            alert("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
     };
 

@@ -29,35 +29,6 @@ export default function SignupPage() {
         }
     };
 
-    // // 로컬에 저장할 임시 유저 데이터
-    // const userData = {
-    //     name,
-    //     userId,
-    //     pw,
-    // };
-
-    // // 기존 저장된 유저 목록 가져오기 (없으면 빈 배열)
-    // const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-    // // 중복 아이디 체크
-    // const isDuplicate = existingUsers.some(
-    //     (user) => user.userId === userId
-    // );
-
-    // if (isDuplicate) {
-    //     alert("이미 존재하는 아이디입니다!");
-    //     return;
-    // }
-
-    // // 새로운 유저 추가 후 다시 저장
-    // const updatedUsers = [...existingUsers, userData];
-    // localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    // console.log("회원가입 데이터:", updatedUsers);
-
-    // alert("회원가입 성공! 로그인 페이지로 이동합니다.");
-    // navigate("/");
-
     return (
         <div className="signup-page">
             <h2 className="signup-title">회원가입</h2>
