@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 exports.verifyToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
@@ -7,7 +8,7 @@ exports.verifyToken = (req, res, next) => {
     if (!token) return res.status(401).json({ message: "로그인이 필요합니다." });
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_Token);
         req.user = decoded; // 이후 req.user.user_id로 접근 가능
         next();
     } catch (err) {

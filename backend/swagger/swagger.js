@@ -11,7 +11,9 @@ const options = {
             description: 'Todo CRUD API 문서 - userTodo 수정 버전'
         },
         servers: [
-            { url: `http://localhost:${process.env.PORT}` }
+            { url: '/'},
+            // { url: `http://localhost:${process.env.PORT}`, description: 'Local server' },
+            // { url: '${process.env.VERCEL_URL}', description: 'Production server' }
         ]
     },
     apis: ['./swagger-docs/*.yaml'],
