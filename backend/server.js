@@ -4,6 +4,7 @@ const userTodoRoutes = require('./routes/userTodo-route');
 const userRoutes = require('./routes/user-route');
 const { swaggerUi, swaggerFile } = require('./swagger/swagger');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,11 @@ app.use(cors({origin : 'http://localhost:3000'}));
 app.use('/users/:userId/todos', userTodoRoutes);
 app.use('/user', userRoutes);
 
+
+app.use(
+  '/swagger_todoAPI',
+  express.static(path.join(__dirname, 'node_modules/swagger-ui-dist'))
+);
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(process.env.PORT, () =>
