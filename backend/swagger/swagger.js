@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '../.env' });
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 const options = {
     definition: {
@@ -11,15 +12,14 @@ const options = {
             description: 'Todo CRUD API 문서 - userTodo 수정 버전'
         },
         servers: [
-            { url: '/'},
+            { url: '/' },
             // { url: `http://localhost:${process.env.PORT}`, description: 'Local server' },
             // { url: '${process.env.VERCEL_URL}', description: 'Production server' }
         ]
     },
-    apis: ['./swagger-docs/*.yaml'],
+    apis: [path.join(process.cwd(), 'swagger-docs/*.yaml')]
 };
 
-const specs = swaggerJsdoc(options);
+const swaggerFile = swaggerJsdoc(options);
 
-module.exports = { swaggerUi, specs };
-console.log('Swagger spec loaded:', Object.keys(specs));
+module.exports = { swaggerUi, swaggerFile };
