@@ -17,7 +17,7 @@ const options = {
             // { url: '${process.env.VERCEL_URL}', description: 'Production server' }
         ]
     },
-    apis: [path.join(process.cwd(), 'swagger-docs/*.yaml')]
+    apis: [path.resolve(__dirname, '../swagger-docs/*.yaml')]
 };
 
 const swaggerFile = swaggerJsdoc(options);
