@@ -12,7 +12,7 @@ app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? 'https://todo-list-gamma-opal-93.vercel.app' : 'http://localhost:3000'
 }));
 
-app.use('/users/:userId/todos', userTodoRoutes);
+app.use('/users', userTodoRoutes);
 app.use('/user', userRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));

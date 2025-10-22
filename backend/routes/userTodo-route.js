@@ -5,10 +5,10 @@ const controller = require('../controllers/userTodoController');
 const {checkUserExist} = require('../middleware/checkUserExist');
 const {verifyToken} = require('../middleware/authForJwt');
 
-router.get('/', checkUserExist, verifyToken, controller.getTodos);
-router.post('/', checkUserExist, verifyToken, controller.createTodo);
-router.put('/:id', checkUserExist, verifyToken, controller.updateTodo);
-router.delete('/:id', checkUserExist, verifyToken, controller.deleteTodo);
-router.patch('/:id/complete', checkUserExist, verifyToken, controller.todoComplete);
+router.get('/:userId/todos', checkUserExist, verifyToken, controller.getTodos);
+router.post('/:userId/todos', checkUserExist, verifyToken, controller.createTodo);
+router.put('/:userId/todos/:id', checkUserExist, verifyToken, controller.updateTodo);
+router.delete('/:userId/todos/:id', checkUserExist, verifyToken, controller.deleteTodo);
+router.patch('/:userId/todos/:id/complete', checkUserExist, verifyToken, controller.todoComplete);
 
 module.exports = router;

@@ -11,6 +11,3 @@ const pool = todoListDB.createPool({
 });
 
 module.exports = pool;
-console.log('✅ NODE_ENV:', process.env.NODE_ENV);
-console.log('✅ DB_HOST_CT:', process.env.DB_HOST_CT);
-console.log('✅ DB_PORT_CT:', process.env.DB_PORT_CT);
