@@ -10,14 +10,14 @@ exports.checkUserExist = async (req, res, next) => {
 
         if (user.length === 0) {
             return res.status(404).json({
-                message : "존재하지 않는 user 입니다"
+                message: "존재하지 않는 user 입니다"
             })
         } else next();
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message : "서버 내부에 오류가 발생했습니다.",
-            error : error.message
+        return res.status(500).json({
+            message: "서버 내부에 오류가 발생했습니다.",
+            error: error.message
         })
     }
 }

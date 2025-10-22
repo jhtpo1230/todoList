@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// 회원가입 API : POST
 exports.joinUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
@@ -15,34 +14,31 @@ exports.joinUser = async (req, res) => {
                 JoinSuccess: false,
                 message: "이미 존재하는 ID 입니다."
             });
-        } else {
-            const salt = crypto.randomBytes(16).toString("base64");
-
-            const hashedPassword = crypto
-                .pbkdf2Sync(password, salt, 10000, 16, "sha512")
-                .toString("base64");
-
-
-            await pool.query(
-                'INSERT INTO user (login_id, password, salt) VALUES (?, ?, ?)',
-                [login_id, hashedPassword, salt]
-            );
-
-            res.status(201).json({
-                JoinSuccess: true,
-                message: `${login_id} 님 회원가입을 축하드립니다.`
-            })
         }
+
+        const salt = crypto.randomBytes(16).toString("base64");
+        const hashedPassword = crypto
+            .pbkdf2Sync(password, salt, 10000, 16, "sha512")
+            .toString("base64");
+
+        await pool.query(
+            'INSERT INTO user (login_id, password, salt) VALUES (?, ?, ?)',
+            [login_id, hashedPassword, salt]
+        );
+
+        return res.status(201).json({
+            JoinSuccess: true,
+            message: `${login_id} 님 회원가입을 축하드립니다.`
+        })
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
         })
     }
 }
 
-// 로그인 API : POST
 exports.loginUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
@@ -69,27 +65,27 @@ exports.loginUser = async (req, res) => {
                 message: "비밀번호가 일치하지 않습니다."
             });
         } else {
-            const token = jwt.sign({ user_id: user_id }, process.env.JWT_Token, {
+            const token = jwt.sign({
+                user_id: user_id,
+                login_id: login_id
+            },
+                process.env.JWT_Token, {
                 expiresIn: "2h",
                 issuer: "KJC"
             });
 
-            console.log(checkLoginIdExist[0]);  // 전체 객체 로그    
-            console.log(InputPassword)
-            console.log(password)
-            console.log(HashedPassword)
-            console.log(token)
             return res.status(200).json({
-                loginSuccess: true, // status 상태코드 확인
+                loginSuccess: true,
                 pwSuccess: true,
                 user_id: user_id,
+                login_id: login_id,
                 token: token,
                 message: `${login_id} 님 환영합니다!`
             })
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생"
         })
     }

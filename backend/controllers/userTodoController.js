@@ -16,13 +16,13 @@ exports.getTodos = async (req, res) => {
             });
         }
 
-        res.status(200).json(todos);
+        return res.status(200).json(todos);
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
         });
     }
 };
@@ -44,7 +44,7 @@ exports.createTodo = async (req, res) => {
             [userId, todoContent]
         );
 
-        res.status(201).json({
+        return res.status(201).json({
             id: insertSQL_TodoContent.insertId,
             user_id: userId,
             content: todoContent,
@@ -52,9 +52,9 @@ exports.createTodo = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
         })
     }
 }
@@ -76,15 +76,15 @@ exports.updateTodo = async (req, res) => {
             [todoContent, userId, id]
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             message: `${userId}의 ${id} 번째 todoList가 [ ${todoContent} ]로 변경되었습니다 !`
         });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
         });
     }
 }
@@ -107,14 +107,14 @@ exports.deleteTodo = async (req, res) => {
             [userId, id]
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             message: `todoList [ ${todoContent_BeforeDelete[0].todoContent} ]가 삭제되었습니다 !`
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
         })
     }
 }
@@ -142,14 +142,39 @@ exports.todoComplete = async (req, res) => {
             [check_TodoCompleted, userId, id]
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             message: `todoList가 ${check_TodoCompleted === 1 ? "완료" : "미완료"}로 설정되었습니다 !`
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "서버 내부에 오류 발생",
-            error : error.message
+            error: error.message
+        });
+    }
+}
+
+// 유저가 가진 팀 전체 조회 API : GET  /users/:userId/team
+exports.getTeams = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        // const { userId } = req.user.user_id;
+        const [teams] = await pool.query(
+            'SELECT * FROM team WHERE creater_id = ?',
+            [userId]
+        );
+        if (teams.length === 0) {
+            return res.status(404).json({
+                message: "해당 유저에게 존재하는 팀이 없습니다."
+            });
+        }
+
+        return res.status(200).json(teams);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "서버 내부에 오류 발생",
+            error: error.message
         });
     }
 }

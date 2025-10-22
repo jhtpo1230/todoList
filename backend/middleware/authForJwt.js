@@ -5,11 +5,14 @@ exports.verifyToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1]; // Bearer 뒤의 토큰 부분
 
-    if (!token) return res.status(401).json({ message: "로그인이 필요합니다." });
+    if (!token)
+        return res.status(401).json({
+            message: "로그인이 필요합니다."
+        });
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_Token);
-        req.user = decoded; // 이후 req.user.user_id로 접근 가능
+        req.user = decoded;
         next();
     } catch (err) {
         console.error(error);
