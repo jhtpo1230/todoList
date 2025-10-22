@@ -1,9 +1,10 @@
 require('dotenv').config();
 const todoListDB = require('mysql2/promise');
 
+const isVercel = process.env.NODE_ENV === 'production';
 const pool = todoListDB.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+  host: isVercel ? process.env.DB_HOST_CT : process.env.DB_HOST_LOCAL,
+  port: isVercel ? process.env.DB_PORT_CT : process.env.DB_PORT_LOCAL,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME

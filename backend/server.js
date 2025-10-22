@@ -4,7 +4,6 @@ const userTodoRoutes = require('./routes/userTodo-route');
 const userRoutes = require('./routes/user-route');
 const { swaggerUi, swaggerFile } = require('./swagger/swagger');
 const cors = require('cors');
-const path = require('path');
 
 const app = express();
 app.use(express.json());
