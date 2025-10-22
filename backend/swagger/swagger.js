@@ -10,8 +10,9 @@ const options = {
             version: '1.2.0',
             description: 'Todo CRUD API 문서 - userTodo 수정 버전'
         },
-        servers: [{ url: '/' }]
+        servers: [{ url: '/' }],
     },
+    
     apis: ['./swagger-docs/*.yaml']
 };
 

@@ -9,7 +9,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? 'https://todo-list-gamma-opal-93.vercel.app' : 'http://localhost:3000'
+    origin: ['https://todolist-red-zeta-98.vercel.app', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use('/users', userTodoRoutes);
