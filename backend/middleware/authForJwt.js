@@ -13,6 +13,9 @@ exports.verifyToken = (req, res, next) => {
         next();
     } catch (err) {
         console.error(error);
-        return res.status(403).json({ message: "유효하지 않은 토큰입니다." });
+        return res.status(403).json({
+            message: "유효하지 않은 토큰입니다.",
+            error: error.message
+        });
     }
 };

@@ -8,7 +8,9 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 
-app.use(cors({origin : 'http://localhost:3000'}));
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? 'https://todo-list-gamma-opal-93.vercel.app' : 'http://localhost:3000'
+}));
 
 app.use('/users/:userId/todos', userTodoRoutes);
 app.use('/user', userRoutes);

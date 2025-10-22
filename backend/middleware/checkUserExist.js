@@ -16,7 +16,8 @@ exports.checkUserExist = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message : "서버 내부에 오류가 발생했습니다."
+            message : "서버 내부에 오류가 발생했습니다.",
+            error : error.message
         })
     }
 }

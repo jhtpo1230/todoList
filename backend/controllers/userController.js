@@ -36,7 +36,8 @@ exports.joinUser = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "서버 내부에 오류 발생"
+            message: "서버 내부에 오류 발생",
+            error : error.message
         })
     }
 }
