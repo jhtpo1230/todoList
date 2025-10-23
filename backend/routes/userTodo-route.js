@@ -12,5 +12,6 @@ router.delete('/:userId/todos/:id', verifyToken, checkUserExist, controller.dele
 router.patch('/:userId/todos/:id/complete', verifyToken, checkUserExist, controller.todoComplete);
 
 router.get('/:userId/team', controller.getTeams); // jwt 토큰 검증 코드 추가 필요
+router.post('/:userId/team/create', controller.createTeam); // jwt 토큰 검증 필요
 
 module.exports = router;

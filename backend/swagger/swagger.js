@@ -1,4 +1,3 @@
-require('dotenv').config({ path: '../.env' });
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -8,9 +7,13 @@ const options = {
         info: {
             title: 'TodoList API',
             version: '1.1.0',
-            description: 'Todo CRUD API 문서 - 팀 생성 추가 버전'
+            description: 'Todo CRUD API 문서'
         },
         servers: [{ url: '/' }],
+        tags: [{
+            name : "user",
+            name : "team"
+        }]
     },
 
     apis: ['./swagger-docs/*.yaml']

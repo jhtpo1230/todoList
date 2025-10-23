@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const userTodoRoutes = require('./routes/userTodo-route');
 const userRoutes = require('./routes/user-route');
-const teamRoutes = require('./routes/team-route');
+const teamTodoRoutes = require('./routes/teamTodo-route');
 const { swaggerUi, swaggerFile } = require('./swagger/swagger');
 const cors = require('cors');
 
@@ -17,8 +17,7 @@ app.use(cors({
 
 app.use('/users', userTodoRoutes);
 app.use('/user', userRoutes);
-
-app.use('/team', teamRoutes);
+app.use('/teams', teamTodoRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
