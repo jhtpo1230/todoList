@@ -246,31 +246,28 @@ paths:
         '500':
           description: 서버 내부 오류
 
-  /users/{userId}/team/create:
-    post:
-      tags: [user]
-      summary: team 생성
-      parameters:
-        - in: path
-          name: userId
+  /team/create:
+  post:
+    tags: [team]
+    summary: 팀 생성
+    security:
+      - bearerAuth: []   # JWT 인증 필요
+    requestBody:
+      required: true
+      content:
+        application/json:
           schema:
-            type: integer
-          required: true
-          description: 팀 생성할 사용자 ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                team_name:
-                  type: string
-      responses:
-        '201':
-          description: 팀 생성 성공
-        '400':
-          description: 팀 생성 실패 (중복되는 팀 이름)
+            type: object
+            properties:
+              team_name:
+                type: string
+    responses:
+      '201':
+        description: 팀 생성 성공
+      '400':
+        description: 팀 생성 실패 (중복되는 팀 이름)
+      '401':
+        description: 인증 실패 (토큰 없음 또는 유효하지 않음)
 
   /teams/{teamId}/todos:
     get:

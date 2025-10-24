@@ -3,6 +3,7 @@ const express = require('express');
 const userTodoRoutes = require('./routes/userTodo-route');
 const userRoutes = require('./routes/user-route');
 const teamTodoRoutes = require('./routes/teamTodo-route');
+const teamRoutes = require('./routes/team-route');
 const { swaggerUi, swaggerFile } = require('./swagger/swagger');
 const cors = require('cors');
 
@@ -16,8 +17,10 @@ app.use(cors({
 }));
 
 app.use('/users', userTodoRoutes);
+// app.use('/users', userTodoRoutes); => /users/todo
 app.use('/user', userRoutes);
 app.use('/teams', teamTodoRoutes);
+app.use('/team', teamTodoRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

@@ -6,12 +6,12 @@ const {checkUserExist} = require('../middleware/checkUserExist');
 const {verifyToken} = require('../middleware/authForJwt');
 
 router.get('/:userId/todos', verifyToken, checkUserExist, controller.getTodos);
+// router.get('/todos', verifyToken, checkUserExist, controller.getTodos);
 router.post('/:userId/todos', verifyToken, checkUserExist, controller.createTodo);
 router.put('/:userId/todos/:id', verifyToken, checkUserExist, controller.updateTodo);
 router.delete('/:userId/todos/:id', verifyToken, checkUserExist, controller.deleteTodo);
 router.patch('/:userId/todos/:id/complete', verifyToken, checkUserExist, controller.todoComplete);
 
 router.get('/:userId/team', controller.getTeams); // jwt 토큰 검증 코드 추가 필요
-router.post('/:userId/team/create', controller.createTeam); // jwt 토큰 검증 필요
 
 module.exports = router;

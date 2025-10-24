@@ -76,7 +76,7 @@ exports.updateTodo = async (req, res) => {
         );
 
         return res.status(200).json({
-            message: `${teamId}의 todoList가 변경되었습니다 !`
+            message: `todoList가 ${todoContent} 로 변경되었습니다 !`
         });
 
     } catch (error) {
