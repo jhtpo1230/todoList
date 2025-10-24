@@ -2,9 +2,9 @@ const pool = require('../db/todoListDB');
 
 exports.createTeam = async (req, res) => {
     try {
-        const userId = req.user.user_id;
-        const { team_name } = req.body;
-        
+        const { team_name, userId } = req.body;
+        // const userId = req.user.user_id;
+
         const [checkTeamNameExist] = await pool.query(
             'SELECT * FROM team WHERE team_name = ?', [team_name]
         );
@@ -14,7 +14,7 @@ exports.createTeam = async (req, res) => {
                 message: "이미 존재하는 Team 이름입니다."
             });
         }
-
+        console.log("📦 req.body:", req.body); // ✅ 이거 추가
         await pool.query(
             'INSERT INTO team (team_name, creater_id) VALUES (?, ?)',
             [team_name, userId]

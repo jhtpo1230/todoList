@@ -20,7 +20,7 @@ app.use('/users', userTodoRoutes);
 // app.use('/users', userTodoRoutes); => /users/todo
 app.use('/user', userRoutes);
 app.use('/teams', teamTodoRoutes);
-app.use('/team', teamTodoRoutes);
+app.use('/team', teamRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
