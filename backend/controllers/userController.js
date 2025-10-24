@@ -79,10 +79,30 @@ exports.loginUser = async (req, res) => {
                 pwSuccess: true,
                 user_id: user_id,
                 login_id: login_id,
+                lastViewPage : checkLoginIdExist[0].lastViewPage || 0,
                 token: token,
                 message: `${login_id} 님 환영합니다!`
             })
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "서버 내부에 오류 발생"
+        })
+    }
+}
+
+exports.logoutUser = async (req, res) => {
+    try {
+        const { userId, lastViewPage } = req.body;
+        await pool.query(
+            "UPDATE user SET lastViewPage = ? WHERE user_id = ?",
+            [lastViewPage, userId]
+        );
+
+        return res.status(200).json({
+            message: `로그아웃 되었습니다!`
+        })
     } catch (error) {
         console.error(error);
         return res.status(500).json({
