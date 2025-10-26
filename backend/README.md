@@ -20,8 +20,8 @@ npm install
 ```bash
 node server.js
 ```
-
-서버 실행 후 아래 주소로 접속 👇
+#### 5️⃣ Swagger 테스트
+서버 실행 후 아래 주소로 접속 👇<br>
 📍 Swagger UI: http://localhost:8080/swagger_todoAPI/
 
 ---
@@ -29,17 +29,25 @@ node server.js
 | 기술                    | 설명             |
 | --------------------- | -------------- |
 | **Node.js (Express)** | RESTful API 서버 |
-| **MariaDB (MySQL)**   | 데이터베이스         |
+| **MariaDB (MySQL2)**   | 데이터베이스         |
 | **Docker** | DB 컨테이너 실행 및 환경 구성 |
 | **Swagger**           | API 문서화 도구     |
+
+### 🧩 주요 기술 스택
+| 기술                    | 설명             |
+| --------------------- | -------------- |
+| **Vercel** | Express 서버 배포 |
+| **Cloudtype**   | MariaDB 컨테이너(DB 인스턴스) 배포 및 관리  |
+
 ---
-### 🔧 DATABASE ERD (👇 추가 예정 👇)
+### 🔧 DATABASE ERD 
 
-<img width="796" height="435" alt="image" src="https://github.com/user-attachments/assets/c809681b-95b4-47dc-878c-1629811edc6b" />
+<img width="975" height="478" alt="image" src="https://github.com/user-attachments/assets/95cf4f15-8f5d-4b0f-b4a1-5a3639a1a942" />
+
 
 ---
 
-### 🔧 USER TODO API 기능 (👇 추가 예정 👇)
+### 🔧 USER TODO API 기능 
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
 | `GET`   | `/users/:userId/todos` | User Todo 전체 조회 |
@@ -47,17 +55,38 @@ node server.js
 | `PUT`    | `/users/:userId/todos/:id` | User Todo 수정    |
 | `DELETE`   | `/users/:userId/todos/:id`     | User Todo 삭제  |
 | `PATCH`   | `/users/:userId/todos/:id/complete`  | User Todo 완료/미완료 |
+| `GET`   | `/users/:userId/team`  | User 팀 조회 |
 
-### 🔧 USER API 기능 (👇 추가 예정 👇)
+### 🔧 USER API 기능 
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
 | `POST`   | `/user/join`     | User 회원가입 |
 | `POST`   | `/user/login`    | User 로그인   |
+| `POST`   | `/user/logout`    | User 로그아웃   |
+
+### 🔧 Team TODO API 기능 
+| 메서드      | 경로          | 설명         |
+| -------- | ----------- | ---------- |
+| `GET`   | `/teams/:teamId/todos` | Team Todo 전체 조회 |
+| `POST`   | `/teams/:teamId/todos`   | Team Todo 등록    |
+| `PUT`    | `/teams/:teamId/todos/:id` | Team Todo 수정    |
+| `DELETE`   | `/teams/:teamId/todos/:id`     | Team Todo 삭제  |
+| `PATCH`   | `/teams/:teamId/todos/:id/complete`  | Team Todo 완료/미완료 |
+| `DELETE`   | `/teams/:teamId`  | Team 삭제 |
+
+### 🔧 Team API 기능 
+| 메서드      | 경로          | 설명         |
+| -------- | ----------- | ---------- |
+| `POST`   | `/team/create`     | Team 생성 |
+| `GET`   | `/team/:teamId`    | Team 팀원 조회  |
+| `POST`   | `/team/teamId/invite`     | Team 팀원 초대 |
+| `DELETE`   | `/team/:teamId/delete`    | Team 팀원 삭제 |
 
 ---
-### 🧠 TroubleShooting (👇 추가 예정 👇)
+### 🧠 TroubleShooting 
 | 이슈                          | 원인                    | 해결                                              |
 | --------------------------- | --------------------- | ----------------------------------------------- |
 | ⚙️ **Express + Swagger 충돌** | [Express 5.x 호환 문제]<br> swagger-ui-express는 아직 Express 4 기준으로 만들어져 있어서  Express 5 환경에서는 응답으로 "ERR_INVALID_HTTP_RESPONSE" (잘못된 응답 헤더) 오류를 띄움 | `npm install express@4.19.2` 로 express 다운그레이드  |
 | 🚫 **Swagger UI 안 뜸**       | Chrome이 `6666` 포트를 "unsafe port"로 차단 | 안전한 개발용 포트 `PORT=8080`으로 변경  |                                             |
 | 🐋 **Docker ENOENT 오류**     | Docker 컨테이너 포트번호와 서버 포트번호를 동일하게 설정하여 Docker Desktop 엔진 꺼짐  | 서버 포트번호를 변경하고 재실행   |
+| 🧩 **Swagger JWT 인증 테스트 비효율 문제** | Swagger 환경에서 JWT 로그인 → 토큰 발급 → API 호출 과정에서 토큰 인증 절차로 인해 테스트 효율이 저하됨 | 초기에는 URL 파라미터 기반으로 기능 검증 후, 안정화 단계에서 JWT 인증 모듈을 통합 적용 |
