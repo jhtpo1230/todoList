@@ -70,8 +70,6 @@ paths:
                       type: string
                     todoCompleted:
                       type: boolean
-        '404':
-          description: 해당 유저에게 등록된 Todo가 없음
         '500':
           description: 서버 내부 오류
 
@@ -296,8 +294,6 @@ paths:
                       type: string
                     todoCompleted:
                       type: boolean
-        '200':
-          description: 해당 팀에게 등록된 Todo가 없음
         '500':
           description: 서버 내부 오류
 

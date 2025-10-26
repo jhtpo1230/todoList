@@ -10,13 +10,7 @@ exports.getTodos = async (req, res) => {
             'SELECT * FROM userTodo WHERE user_id = ?',
             [userId]
         );
-
-        if (todos.length === 0) {
-            return res.status(404).json({
-                message: "해당 유저에게 등록된 todo가 없습니다."
-            });
-        }
-
+        
         return res.status(200).json(todos);
 
     } catch (error) {

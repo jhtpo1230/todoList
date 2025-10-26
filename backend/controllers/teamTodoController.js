@@ -9,13 +9,7 @@ exports.getTodos = async (req, res) => {
             'SELECT * FROM teamTodo WHERE team_id = ?',
             [teamId]
         );
-
-        if (todos.length === 0) {
-            return res.status(200).json({
-                message: "해당 팀에게 등록된 todo가 없습니다."
-            });
-        }
-
+        
         return res.status(200).json(todos);
 
     } catch (error) {
