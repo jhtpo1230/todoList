@@ -10,7 +10,7 @@ exports.getTodos = async (req, res) => {
             'SELECT * FROM userTodo WHERE user_id = ?',
             [userId]
         );
-        
+
         return res.status(200).json(todos);
 
     } catch (error) {
@@ -155,14 +155,11 @@ exports.getTeams = async (req, res) => {
         const { userId } = req.params;
         // const { userId } = req.user.user_id;
         const [teams] = await pool.query(
-            'SELECT * FROM team WHERE creater_id = ?',
+            `SELECT t.team_name, t.creater_id, ut.user_id, ut.team_id 
+            FROM team t JOIN user_team ut ON t.id = ut.team_id 
+            WHERE user_id = ?`,
             [userId]
         );
-        if (teams.length === 0) {
-            return res.status(404).json({
-                message: "해당 유저에게 존재하는 팀이 없습니다."
-            });
-        }
 
         return res.status(200).json(teams);
     } catch (error) {

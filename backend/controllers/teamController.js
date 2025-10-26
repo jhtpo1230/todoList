@@ -14,13 +14,20 @@ exports.createTeam = async (req, res) => {
                 message: "이미 존재하는 Team 이름입니다."
             });
         }
-        await pool.query(
+        const [teamResult] = await pool.query(
             'INSERT INTO team (team_name, creater_id) VALUES (?, ?)',
             [team_name, userId]
         );
 
+        const teamId = teamResult.insertId;
+        await pool.query(
+            'INSERT INTO user_team (team_id, user_id) VALUES (?, ?)',
+            [teamId, userId]
+        );
+
         return res.status(201).json({
             CreateSuccess: true,
+            team_id: teamId,
             creater_id: userId,
             message: `${team_name} 이 생성되었습니다.`
         })
@@ -38,8 +45,10 @@ exports.getTeamMembers = async (req, res) => {
     try {
         const { teamId } = req.params;
 
-        const [ teamMembers ] = await pool.query(
-            'SELECT * FROM user_team WHERE team_id = ?',
+        const [teamMembers] = await pool.query(
+            `SELECT ut.user_id, u.login_id, ut.team_id 
+            FROM user_team ut JOIN user u ON ut.user_id = u.user_id 
+            WHERE ut.team_id = ?`,
             [teamId]
         );
 
@@ -80,16 +89,16 @@ exports.inviteTeamMember = async (req, res) => {
             });
         }
 
-        const [checkUserIsCreater] = await pool.query(
-            'SELECT * FROM team WHERE creater_id = ? AND id = ?',
-            [checkLoginIdExist[0].user_id, teamId]
-        );
-        if (checkUserIsCreater.length > 0) {
-            return res.status(400).json({
-                inviteSuccess: false,
-                message: `${loginId}는 팀의 생성자입니다.`
-            });
-        }
+        // const [checkUserIsCreater] = await pool.query(
+        //     'SELECT * FROM team WHERE creater_id = ? AND id = ?',
+        //     [checkLoginIdExist[0].user_id, teamId]
+        // );
+        // if (checkUserIsCreater.length > 0) {
+        //     return res.status(400).json({
+        //         inviteSuccess: false,
+        //         message: `${loginId}는 팀의 생성자입니다.`
+        //     });
+        // }
 
         await pool.query(
             'INSERT INTO user_team (user_id, team_id) VALUES (?, ?)',
@@ -114,14 +123,26 @@ exports.deleteTeamMember = async (req, res) => {
         const { teamId } = req.params;
         const { userId } = req.body;
 
+        const [teamHasOnlyOneUser] = await pool.query(
+            `SELECT COUNT(*) AS count FROM user_team WHERE team_id = ?`,
+            [teamId]
+        )
+
+        if (teamHasOnlyOneUser[0].count === 1) {
+            return res.status(403).json({
+                deleteSuccess: false,
+                message: `팀에는 적어도 1명 이상의 팀원이 존재해야 합니다.`
+            })
+        }
+
         await pool.query(
             'DELETE FROM user_team WHERE user_id = ? AND team_id = ?',
             [userId, teamId]
         )
 
         return res.status(201).json({
-            deleteSuccess : true,
-            message : `팀에서 삭제되었습니다.`
+            deleteSuccess: true,
+            message: `팀에서 삭제되었습니다.`
         })
     } catch (error) {
         console.error(error);
