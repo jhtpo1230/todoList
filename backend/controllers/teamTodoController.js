@@ -9,7 +9,7 @@ exports.getTodos = async (req, res) => {
             'SELECT * FROM teamTodo WHERE team_id = ?',
             [teamId]
         );
-        
+
         return res.status(200).json(todos);
 
     } catch (error) {
@@ -158,7 +158,7 @@ exports.deleteTeam = async (req, res) => {
         );
 
         return res.status(200).json({
-            message : "팀이 삭제되었습니다."
+            message : "팀이 삭제되었습니다.",
         });
 
     } catch (error) {

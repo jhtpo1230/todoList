@@ -74,12 +74,31 @@ exports.loginUser = async (req, res) => {
                 issuer: "KJC"
             });
 
+            let setLastViewPage = 0; 
+            const [lastViewPage] = await pool.query(
+                'SELECT lastViewPage FROM user WHERE user_id = ?',
+                [user_id]
+            );
+            
+            if (lastViewPage[0].lastViewPage !== 0) {
+                const [userTeamIsEXist] = await pool.query( // lastViewPage가 팀이고 팀이 있으면
+                    `SELECT lastViewPage FROM user u JOIN user_team ut 
+                    ON u.lastViewPage = ut.team_id AND u.user_id = ut.user_id
+                    WHERE u.user_id = ?`,
+                    [user_id]
+                );
+        
+                if (userTeamIsEXist.length > 0) {
+                    setLastViewPage = lastViewPage[0].lastViewPage;
+                }
+            }
+
             return res.status(200).json({
                 loginSuccess: true,
                 pwSuccess: true,
                 user_id: user_id,
                 login_id: login_id,
-                lastViewPage : lastViewPage ?? 0,
+                lastViewPage: setLastViewPage,
                 token: token,
                 message: `${login_id} 님 환영합니다!`
             })
