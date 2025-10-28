@@ -1,0 +1,25 @@
+/* === TodoPage 전체 레이아웃 === */
+.todo-page {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 32px; /*  사이드바와 내용 간격 */
+    background-color: #ffffff;
+    height: 100vh;
+    font-family: "Pretendard", sans-serif;
+}
+
+/* === 오른쪽 컨텐츠 영역 === */
+.todo-container {
+    flex: 1;
+    padding: 40px 60px 40px 0; /*  오른쪽만 여유, 왼쪽은 0으로 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /*  내부 컴포넌트 왼쪽 정렬 */
+    justify-content: flex-start;
+}
+
+/* 입력창과 리스트 간격 살짝 정리 */
+.todo-input {
+    margin-bottom: 24px;
+}

@@ -33,7 +33,7 @@ exports.createTodo = async (req, res) => {
                 error: 'todoContent is empty !!'
             });
         }
-        // result = [insertResult, fieldInfo]
+        
         const [insertSQL_TodoContent] = await pool.query(
             'INSERT INTO userTodo (user_id, todoContent) VALUES (?, ?)',
             [userId, todoContent]

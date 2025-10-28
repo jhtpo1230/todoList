@@ -17,7 +17,6 @@ app.use(cors({
 }));
 
 app.use('/users', userTodoRoutes);
-// app.use('/users', userTodoRoutes); => /users/todo
 app.use('/user', userRoutes);
 app.use('/teams', teamTodoRoutes);
 app.use('/team', teamRoutes);

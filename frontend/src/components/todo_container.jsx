@@ -5,47 +5,69 @@ import ConfirmModal from "./confirm_modal";
 import "../styles/common.css";
 //api 불러오기
 import {
+    // 개인용
     getTodos,
     addTodo,
     updateTodo,
     deleteTodo,
     toggleComplete,
+    // 팀용
+    getTeamTodos,
+    addTeamTodo,
+    updateTeamTodo,
+    deleteTeamTodo,
+    toggleTeamTodo,
 } from "../api/todo_api"; // 나중에 추가
 
-export default function TodoContainer({ userId }) {
+export default function TodoContainer({ userId, teamId }) {
     const [todos, setTodos] = useState([]); //실제 데이터를 저장 하는 곳
     const [showModal, setShowModal] = useState(false); //모달 표시상태
     const [targetId, setTargetId] = useState(null); //삭제 대상 id 저장
 
     useEffect(() => {
-        if (!userId) return; // userId가 없으면 실행하지 않음
+        //페이지 진입시 코드
+        if (!userId && !teamId) return;
 
         const fetchTodos = async () => {
             try {
-                const data = await getTodos(userId); //  서버에서 목록 불러오기
-                setTodos(data); // 응답 받은 데이터로 상태 업데이트
+                const data = teamId
+                    ? await getTeamTodos(teamId)
+                    : await getTodos(userId);
+                setTodos(data);
             } catch (err) {
-                console.error("할 일 불러오기 실패:", err);
+                console.error("할 일 목록 불러오기 실패:", err);
             }
         };
-        fetchTodos(); // 함수 실행
-    }, [userId]);
-
+        fetchTodos();
+    }, [userId, teamId]);
+    // 할 일 추가
     const handleAdd = async (title) => {
         try {
-            await addTodo(userId, title); //  서버에 새 todo 추가 요청
-            const updated = await getTodos(userId); //  DB의 최신 상태 불러오기
-            setTodos(updated); //  React 화면 업데이트
+            if (teamId) {
+                await addTeamTodo(teamId, title);
+                const updated = await getTeamTodos(teamId);
+                setTodos(updated);
+            } else {
+                await addTodo(userId, title);
+                const updated = await getTodos(userId);
+                setTodos(updated);
+            }
         } catch (err) {
             console.error("할 일 추가 실패:", err);
         }
     };
-
+    // 할 일 수정
     const handleUpdate = async (id, value) => {
         try {
-            await updateTodo(userId, id, value); // 서버에 PUT 요청
-            const updated = await getTodos(userId); // 최신 목록 다시 불러오기
-            setTodos(updated);
+            if (teamId) {
+                await updateTeamTodo(teamId, id, value);
+                const updated = await getTeamTodos(teamId);
+                setTodos(updated);
+            } else {
+                await updateTodo(userId, id, value);
+                const updated = await getTodos(userId);
+                setTodos(updated);
+            }
         } catch (err) {
             console.error("할 일 수정 실패:", err);
         }
@@ -58,9 +80,15 @@ export default function TodoContainer({ userId }) {
 
     const confirmDelete = async () => {
         try {
-            await deleteTodo(userId, targetId);
-            const updated = await getTodos(userId);
-            setTodos(updated);
+            if (teamId) {
+                await deleteTeamTodo(teamId, targetId);
+                const updated = await getTeamTodos(teamId);
+                setTodos(updated);
+            } else {
+                await deleteTodo(userId, targetId);
+                const updated = await getTodos(userId);
+                setTodos(updated);
+            }
         } catch (err) {
             console.error("할 일 삭제 실패:", err);
         } finally {
@@ -76,9 +104,15 @@ export default function TodoContainer({ userId }) {
 
     const handleToggle = async (id) => {
         try {
-            await toggleComplete(userId, id); // 서버에 PATCH 요청
-            const updated = await getTodos(userId); // 완료 상태 반영된 최신 목록
-            setTodos(updated);
+            if (teamId) {
+                await toggleTeamTodo(teamId, id);
+                const updated = await getTeamTodos(teamId);
+                setTodos(updated);
+            } else {
+                await toggleComplete(userId, id);
+                const updated = await getTodos(userId);
+                setTodos(updated);
+            }
         } catch (err) {
             console.error("할 일 완료/미완료 토글 실패:", err);
         }
