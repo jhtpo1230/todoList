@@ -42,45 +42,36 @@ node server.js
 ---
 ### 🔧 DATABASE ERD 
 
-<img width="975" height="478" alt="image" src="https://github.com/user-attachments/assets/95cf4f15-8f5d-4b0f-b4a1-5a3639a1a942" />
+<img width="812" height="476" alt="image" src="https://github.com/user-attachments/assets/4b7bb090-789c-4f72-adbe-01e290185500" />
+
 
 
 ---
 
-### 🔧 USER TODO API 기능 
+### 🔧 TODO API 기능 
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
-| `GET`   | `/users/:userId/todos` | User Todo 전체 조회 |
-| `POST`   | `/users/:userId/todos`   | User Todo 등록    |
-| `PUT`    | `/users/:userId/todos/:id` | User Todo 수정    |
-| `DELETE`   | `/users/:userId/todos/:id`     | User Todo 삭제  |
-| `PATCH`   | `/users/:userId/todos/:id/complete`  | User Todo 완료/미완료 |
-| `GET`   | `/users/:userId/team`  | User 팀 조회 |
+| `GET`   | `/todos` |  Todo 전체 조회 |
+| `POST`   | `/todos`   |  Todo 등록    |
+| `PUT`    | `/todos/:todoId` |  Todo 수정    |
+| `DELETE`   | `/todos/:todoId` | Todo 삭제  |
 
 ### 🔧 USER API 기능 
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
-| `POST`   | `/user/join`     | User 회원가입 |
-| `POST`   | `/user/login`    | User 로그인   |
-| `POST`   | `/user/logout`    | User 로그아웃   |
-
-### 🔧 Team TODO API 기능 
-| 메서드      | 경로          | 설명         |
-| -------- | ----------- | ---------- |
-| `GET`   | `/teams/:teamId/todos` | Team Todo 전체 조회 |
-| `POST`   | `/teams/:teamId/todos`   | Team Todo 등록    |
-| `PUT`    | `/teams/:teamId/todos/:id` | Team Todo 수정    |
-| `DELETE`   | `/teams/:teamId/todos/:id`     | Team Todo 삭제  |
-| `PATCH`   | `/teams/:teamId/todos/:id/complete`  | Team Todo 완료/미완료 |
-| `DELETE`   | `/teams/:teamId`  | Team 삭제 |
+| `POST`   | `/users`     | User 회원가입 |
+| `POST`   | `/users/login`    | User 로그인   |
+| `POST`   | `/users/logout`    | User 로그아웃   |
+| `GET`   | `/users/team`  | User 팀 조회 |
 
 ### 🔧 Team API 기능 
 | 메서드      | 경로          | 설명         |
 | -------- | ----------- | ---------- |
-| `POST`   | `/team/create`     | Team 생성 |
-| `GET`   | `/team/:teamId`    | Team 팀원 조회  |
-| `POST`   | `/team/teamId/invite`     | Team 팀원 초대 |
-| `DELETE`   | `/team/:teamId/delete`    | Team 팀원 삭제 |
+| `POST`   | `/teams`     | Team 생성 |
+| `DELETE`   | `/teams/:teamId`  | Team 삭제 |
+| `GET`   | `/teams/:teamId`    | Team 팀원 조회  |
+| `POST`   | `/teams/:teamId/members`     | Team 팀원 초대 |
+| `DELETE`   | `/teams/:teamId/members/:userId`    | Team 팀원 삭제 |
 
 ---
 ### 🧠 TroubleShooting 
