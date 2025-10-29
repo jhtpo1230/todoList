@@ -70,7 +70,7 @@ exports.loginUser = async (req, res) => {
                 login_id: login_id
             },
                 process.env.JWT_Token, {
-                expiresIn: "2h",
+                expiresIn: "5h",
                 issuer: "KJC"
             });
 
@@ -92,7 +92,7 @@ exports.loginUser = async (req, res) => {
                     setLastViewPage = lastViewPage[0].lastViewPage;
                 }
             }
-
+            console.log(token);
             return res.status(200).json({
                 loginSuccess: true,
                 pwSuccess: true,

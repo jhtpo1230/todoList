@@ -2,16 +2,13 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 
 const controller = require('../controllers/userTodoController');
-const {checkUserExist} = require('../middleware/checkUserExist');
 const {verifyToken} = require('../middleware/authForJwt');
 
-router.get('/:userId/todos', verifyToken, checkUserExist, controller.getTodos);
-// router.get('/todos', verifyToken, checkUserExist, controller.getTodos);
-router.post('/:userId/todos', verifyToken, checkUserExist, controller.createTodo);
-router.put('/:userId/todos/:id', verifyToken, checkUserExist, controller.updateTodo);
-router.delete('/:userId/todos/:id', verifyToken, checkUserExist, controller.deleteTodo);
-router.patch('/:userId/todos/:id/complete', verifyToken, checkUserExist, controller.todoComplete);
+router.get('/todos', verifyToken, controller.getTodos);
+router.post('/todos', verifyToken, controller.createTodo);
+router.put('/todos/:id', verifyToken, controller.updateTodo);
+router.delete('/todos/:id', verifyToken, controller.deleteTodo);
 
-router.get('/:userId/team', controller.getTeams); // jwt 토큰 검증 코드 추가 필요
+router.get('/team', controller.getTeams);
 
 module.exports = router;
