@@ -1,12 +1,13 @@
 const pool = require('../db/todoListDB');
 
+// 팀 생성 API : POST  /team
 exports.createTeam = async (req, res) => {
     try {
-        const { team_name, userId } = req.body;
-        // const userId = req.user.user_id;
+        const userId = req.user.user_id;
+        const { teamName } = req.body;
 
         const [checkTeamNameExist] = await pool.query(
-            'SELECT * FROM team WHERE team_name = ?', [team_name]
+            'SELECT * FROM team WHERE team_name = ?', [teamName]
         );
         if (checkTeamNameExist.length > 0) {
             return res.status(400).json({
@@ -16,7 +17,7 @@ exports.createTeam = async (req, res) => {
         }
         const [teamResult] = await pool.query(
             'INSERT INTO team (team_name, creater_id) VALUES (?, ?)',
-            [team_name, userId]
+            [teamName, userId]
         );
 
         const teamId = teamResult.insertId;
@@ -27,9 +28,9 @@ exports.createTeam = async (req, res) => {
 
         return res.status(201).json({
             CreateSuccess: true,
-            team_id: teamId,
-            creater_id: userId,
-            message: `${team_name} 이 생성되었습니다.`
+            teamId: teamId,
+            createrId: userId,
+            message: `${teamName} 이 생성되었습니다.`
         })
     } catch (error) {
         console.error(error);
@@ -40,11 +41,34 @@ exports.createTeam = async (req, res) => {
     }
 }
 
-// 팀원 목록 조회
+// 팀 삭제 API : DELETE  /team/:teamId
+exports.deleteTeam = async (req, res) => {
+    try {
+        const teamId = req.params.teamId;
+
+        await pool.query(
+            'DELETE FROM team WHERE id = ?',
+            [teamId]
+        );
+
+        return res.status(200).json({
+            message : "팀이 삭제되었습니다.",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "서버 내부에 오류 발생",
+            error: error.message
+        });
+    }
+};
+
+// 팀원 조회 API : GET  /team/:teamId
 exports.getTeamMembers = async (req, res) => {
     try {
-        const { teamId } = req.params;
-
+        const teamId = req.params.teamId;
+        console.log(teamId)
         const [teamMembers] = await pool.query(
             `SELECT ut.user_id, u.login_id, ut.team_id 
             FROM user_team ut JOIN user u ON ut.user_id = u.user_id 
@@ -63,9 +87,10 @@ exports.getTeamMembers = async (req, res) => {
     }
 };
 
+// 팀원 초대 API : POST  /team/:teamId/members
 exports.inviteTeamMember = async (req, res) => {
     try {
-        const { teamId } = req.params;
+        const teamId = req.params.teamId;
         const { loginId } = req.body;
 
         const [checkLoginIdExist] = await pool.query(
@@ -89,17 +114,6 @@ exports.inviteTeamMember = async (req, res) => {
             });
         }
 
-        // const [checkUserIsCreater] = await pool.query(
-        //     'SELECT * FROM team WHERE creater_id = ? AND id = ?',
-        //     [checkLoginIdExist[0].user_id, teamId]
-        // );
-        // if (checkUserIsCreater.length > 0) {
-        //     return res.status(400).json({
-        //         inviteSuccess: false,
-        //         message: `${loginId}는 팀의 생성자입니다.`
-        //     });
-        // }
-
         await pool.query(
             'INSERT INTO user_team (user_id, team_id) VALUES (?, ?)',
             [checkLoginIdExist[0].user_id, teamId]
@@ -118,10 +132,10 @@ exports.inviteTeamMember = async (req, res) => {
     }
 }
 
+// 팀원 삭제 API : POST  /team/:teamId/members/:userId
 exports.deleteTeamMember = async (req, res) => {
     try {
-        const { teamId } = req.params;
-        const { userId } = req.body;
+        const { teamId, userId} = req.params;
 
         const [teamHasOnlyOneUser] = await pool.query(
             `SELECT COUNT(*) AS count FROM user_team WHERE team_id = ?`,

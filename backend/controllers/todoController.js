@@ -8,12 +8,21 @@ const TodoStatus = Object.freeze({
 // todo 전체 조회 API : GET /todos
 exports.getTodos = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.user_id;
+        const { teamId } = req.query;
+        let todos;
 
-        const [todos] = await pool.query(
-            'SELECT * FROM userTodo WHERE user_id = ?',
-            [userId]
-        );
+        if (!teamId || Number(teamId) === 0) {
+            [todos] = await pool.query(
+                'SELECT * FROM todo WHERE user_id = ? AND team_id = 0',
+                userId,
+            );
+        } else {
+            [todos] = await pool.query(
+                'SELECT * FROM todo WHERE team_id = ?',
+                [teamId]
+            );
+        }
 
         return res.status(200).json(todos);
 
@@ -30,6 +39,7 @@ exports.getTodos = async (req, res) => {
 exports.createTodo = async (req, res) => {
     try {
         const userId = req.user.user_id;
+        const { teamId } = req.query;
         const { todoContent } = req.body;
 
         if (todoContent.trim() === "") {
@@ -37,15 +47,23 @@ exports.createTodo = async (req, res) => {
                 error: 'todoContent is empty !!'
             });
         }
-
-        const [insertSQL_TodoContent] = await pool.query(
-            'INSERT INTO userTodo (user_id, todoContent) VALUES (?, ?)',
-            [userId, todoContent]
-        );
+        let insertTodoContent;
+        if (!teamId || Number(teamId) === 0) {
+            [insertTodoContent] = await pool.query(
+                'INSERT INTO todo (user_id, team_id, todoContent) VALUES (?, 0, ?)',
+                [userId, todoContent]
+            );
+        } else {
+            [insertTodoContent] = await pool.query(
+                'INSERT INTO todo (user_id, team_id, todoContent) VALUES (?, ?, ?)',
+                [userId, teamId, todoContent]
+            );
+        }
 
         return res.status(201).json({
-            id: insertSQL_TodoContent.insertId,
-            user_id: userId,
+            todoId: insertTodoContent.insertId,
+            userId: userId,
+            teamId : teamId,
             content: todoContent,
             todoComplete: false
         });
@@ -58,10 +76,10 @@ exports.createTodo = async (req, res) => {
     }
 }
 
-// todo 수정 API : UPDATE /users/todos/:id
+// todo 수정 API : UPDATE /users/todos/:todoId
 exports.updateTodo = async (req, res) => {
     try {
-        const id = req.params.id;
+        const todoId = req.params.todoId;
         const { todoContent, selectedTodoCompleted } = req.body;
 
         if (todoContent.trim() === "") {
@@ -77,8 +95,8 @@ exports.updateTodo = async (req, res) => {
         }
 
         await pool.query(
-            'UPDATE userTodo SET todoContent = ?, todoCompleted =? WHERE  id = ?',
-            [todoContent, selectedTodoCompleted, id]
+            'UPDATE todo SET todoContent = ?, todoCompleted =? WHERE id = ?',
+            [todoContent, selectedTodoCompleted, todoId]
         );
 
         return res.status(200).json({
@@ -94,22 +112,22 @@ exports.updateTodo = async (req, res) => {
     }
 }
 
-// todo 삭제 API : DELETE /users/todos/:id
+// todo 삭제 API : DELETE /users/todos/:todoId
 exports.deleteTodo = async (req, res) => {
     try {
-        const id = req.params.id;
+        const todoId = req.params.todoId;
         const [todoContentBeforeDelete] = await pool.query(
-            'SELECT todoContent FROM userTodo WHERE id = ?',
-            [id]
+            'SELECT todoContent FROM todo WHERE id = ?',
+            [todoId]
         );
         if (todoContentBeforeDelete.length === 0) {
             return res.status(404).json({
-                message: "해당 유저에게 등록된 todo가 없습니다."
+                message: "해당 todo가 존재하지 않습니다."
             });
         }
         await pool.query(
-            'DELETE FROM userTodo WHERE id = ?',
-            [id]
+            'DELETE FROM todo WHERE id = ?',
+            [todoId]
         );
 
         return res.status(200).json({
@@ -121,26 +139,5 @@ exports.deleteTodo = async (req, res) => {
             message: "서버 내부에 오류 발생",
             error: error.message
         })
-    }
-}
-
-// 유저가 가진 팀 전체 조회 API : GET  /team
-exports.getTeams = async (req, res) => {
-    try {
-        const userId = req.user.user_id;
-        const [teams] = await pool.query(
-            `SELECT t.team_name, t.creater_id, ut.user_id, ut.team_id 
-            FROM team t JOIN user_team ut ON t.id = ut.team_id 
-            WHERE user_id = ?`,
-            [userId]
-        );
-
-        return res.status(200).json(teams);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "서버 내부에 오류 발생",
-            error: error.message
-        });
     }
 }

@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// 회원가입 API : GET  /users
 exports.joinUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
@@ -39,6 +40,7 @@ exports.joinUser = async (req, res) => {
     }
 }
 
+// 로그인 API : GET  /users/login
 exports.loginUser = async (req, res) => {
     try {
         const { login_id, password } = req.body;
@@ -111,6 +113,7 @@ exports.loginUser = async (req, res) => {
     }
 }
 
+// 로그아웃 API : GET  /users/logout
 exports.logoutUser = async (req, res) => {
     try {
         const { userId, lastViewPage } = req.body;
@@ -128,5 +131,26 @@ exports.logoutUser = async (req, res) => {
         return res.status(500).json({
             message: "서버 내부에 오류 발생"
         })
+    }
+}
+
+// 유저가 가진 팀 전체 조회 API : GET  /users/team
+exports.getTeams = async (req, res) => {
+    try {
+        const userId = req.user.user_id;
+        const [teams] = await pool.query(
+            `SELECT t.team_name, t.creater_id, ut.user_id, ut.team_id 
+            FROM team t JOIN user_team ut ON t.id = ut.team_id 
+            WHERE user_id = ?`,
+            [userId]
+        );
+
+        return res.status(200).json(teams);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "서버 내부에 오류 발생",
+            error: error.message
+        });
     }
 }
