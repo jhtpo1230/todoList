@@ -68,7 +68,7 @@ exports.deleteTeam = async (req, res) => {
 exports.getTeamMembers = async (req, res) => {
     try {
         const teamId = req.params.teamId;
-        console.log(teamId)
+        
         const [teamMembers] = await pool.query(
             `SELECT ut.user_id, u.login_id, ut.team_id 
             FROM user_team ut JOIN user u ON ut.user_id = u.user_id 
@@ -135,7 +135,7 @@ exports.inviteTeamMember = async (req, res) => {
 // 팀원 삭제 API : POST  /team/:teamId/members/:userId
 exports.deleteTeamMember = async (req, res) => {
     try {
-        const { teamId, userId} = req.params;
+        const { teamId, userId } = req.params;
 
         const [teamHasOnlyOneUser] = await pool.query(
             `SELECT COUNT(*) AS count FROM user_team WHERE team_id = ?`,

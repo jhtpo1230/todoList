@@ -6,9 +6,9 @@ require('dotenv').config();
 // 회원가입 API : GET  /users
 exports.joinUser = async (req, res) => {
     try {
-        const { login_id, password } = req.body;
+        const { loginId, password } = req.body;
         const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', [login_id]
+            'SELECT * FROM user WHERE login_id = ?', [loginId]
         );
         if (checkLoginIdExist.length > 0) {
             return res.status(400).json({
@@ -24,12 +24,12 @@ exports.joinUser = async (req, res) => {
 
         await pool.query(
             'INSERT INTO user (login_id, password, salt) VALUES (?, ?, ?)',
-            [login_id, hashedPassword, salt]
+            [loginId, hashedPassword, salt]
         );
 
         return res.status(201).json({
             JoinSuccess: true,
-            message: `${login_id} 님 회원가입을 축하드립니다.`
+            message: `${loginId} 님 회원가입을 축하드립니다.`
         })
     } catch (error) {
         console.error(error);
@@ -43,9 +43,11 @@ exports.joinUser = async (req, res) => {
 // 로그인 API : GET  /users/login
 exports.loginUser = async (req, res) => {
     try {
-        const { login_id, password } = req.body;
+        const { loginId, password } = req.body;
         const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', [login_id]
+            `SELECT user_id AS userId, login_id AS loginId, password AS hashedPassword, salt, lastViewPage 
+            FROM user WHERE login_id = ?`,
+            [loginId]
         );
 
         if (checkLoginIdExist.length === 0) {
@@ -55,54 +57,50 @@ exports.loginUser = async (req, res) => {
             });
         };
 
-        const { salt, password: HashedPassword, user_id, lastViewPage } = checkLoginIdExist[0];
+        const { userId, hashedPassword, salt, lastViewPage } = checkLoginIdExist[0];
 
         const InputPassword = crypto
             .pbkdf2Sync(password, salt, 10000, 16, "sha512")
             .toString("base64");
 
-        if (InputPassword !== HashedPassword) {
+        if (InputPassword !== hashedPassword) {
             return res.status(401).json({
                 pwSuccess: false,
                 message: "비밀번호가 일치하지 않습니다."
             });
         } else {
             const token = jwt.sign({
-                user_id: user_id,
-                login_id: login_id
+                userId: userId,
+                loginId: loginId
             },
                 process.env.JWT_Token, {
                 expiresIn: "5h",
                 issuer: "KJC"
             });
 
-            let setLastViewPage = 0; 
-            const [lastViewPage] = await pool.query(
-                'SELECT lastViewPage FROM user WHERE user_id = ?',
-                [user_id]
-            );
+            let setLastViewPage = 0;
             
-            if (lastViewPage[0].lastViewPage !== 0) {
+            if (lastViewPage !== 0) {
                 const [userTeamIsEXist] = await pool.query( // lastViewPage가 팀이고 팀이 있으면
                     `SELECT lastViewPage FROM user u JOIN user_team ut 
                     ON u.lastViewPage = ut.team_id AND u.user_id = ut.user_id
                     WHERE u.user_id = ?`,
-                    [user_id]
+                    [userId]
                 );
         
                 if (userTeamIsEXist.length > 0) {
-                    setLastViewPage = lastViewPage[0].lastViewPage;
+                    setLastViewPage = lastViewPage;
                 }
             }
             console.log(token);
             return res.status(200).json({
                 loginSuccess: true,
                 pwSuccess: true,
-                user_id: user_id,
-                login_id: login_id,
+                userId: userId,
+                loginId: loginId,
                 lastViewPage: setLastViewPage,
                 token: token,
-                message: `${login_id} 님 환영합니다!`
+                message: `${loginId} 님 환영합니다!`
             })
         }
     } catch (error) {
