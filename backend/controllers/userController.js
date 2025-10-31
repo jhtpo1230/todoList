@@ -135,7 +135,7 @@ exports.logoutUser = async (req, res) => {
 // 유저가 가진 팀 전체 조회 API : GET  /users/team
 exports.getTeams = async (req, res) => {
     try {
-        const userId = req.user.user_id;
+        const userId = req.user.userId;
         const [teams] = await pool.query(
             `SELECT t.team_name, t.creater_id, ut.user_id, ut.team_id 
             FROM team t JOIN user_team ut ON t.id = ut.team_id 

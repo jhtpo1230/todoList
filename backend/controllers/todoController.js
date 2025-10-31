@@ -8,7 +8,7 @@ const TodoStatus = Object.freeze({
 // todo 전체 조회 API : GET /todos
 exports.getTodos = async (req, res) => {
     try {
-        const userId = req.user.user_id;
+        const userId = req.user.userId;
         const { teamId } = req.query;
         let todos;
 
@@ -38,7 +38,7 @@ exports.getTodos = async (req, res) => {
 // todo 등록 API : POST /users/todos
 exports.createTodo = async (req, res) => {
     try {
-        const userId = req.user.user_id;
+        const userId = req.user.userId;
         const { teamId } = req.query;
         const { todoContent } = req.body;
 

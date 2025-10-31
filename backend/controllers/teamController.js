@@ -3,7 +3,7 @@ const pool = require('../db/todoListDB');
 // 팀 생성 API : POST  /team
 exports.createTeam = async (req, res) => {
     try {
-        const userId = req.user.user_id;
+        const userId = req.user.userId;
         const { teamName } = req.body;
 
         const [checkTeamNameExist] = await pool.query(
@@ -102,6 +102,7 @@ exports.inviteTeamMember = async (req, res) => {
                 message: "초대하려는 유저가 존재하지 않습니다."
             });
         };
+        console.log(checkLoginIdExist);
 
         const [checkUserExistInTeam] = await pool.query(
             'SELECT * FROM user_team WHERE user_id = ? AND team_id = ?',
