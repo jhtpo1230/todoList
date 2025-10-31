@@ -5,7 +5,6 @@ const TodoStatus = Object.freeze({
     COMPLETED: 'COMPLETED'
 });
 
-// todo 전체 조회 API : GET /todos
 exports.getTodos = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -35,7 +34,6 @@ exports.getTodos = async (req, res) => {
     }
 };
 
-// todo 등록 API : POST /todos
 exports.createTodo = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -76,7 +74,6 @@ exports.createTodo = async (req, res) => {
     }
 }
 
-// todo 수정 API : UPDATE /todos/:todoId
 exports.updateTodo = async (req, res) => {
     try {
         const todoId = req.params.todoId;
@@ -112,7 +109,6 @@ exports.updateTodo = async (req, res) => {
     }
 }
 
-// todo 삭제 API : DELETE /todos/:todoId
 exports.deleteTodo = async (req, res) => {
     const conn = await pool.getConnection();
     try {
