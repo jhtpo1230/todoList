@@ -20,7 +20,3 @@ app.use('/users', userRoutes);
 app.use('/teams', teamRoutes);
 
 app.use('/swagger_todoAPI', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-app.listen(process.env.PORT, () =>
-    console.log(`Server running on http://localhost:${process.env.PORT}`)
-);

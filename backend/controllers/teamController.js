@@ -1,6 +1,5 @@
 const pool = require('../db/todoListDB');
 
-// 팀 생성 API : POST  /team
 exports.createTeam = async (req, res) => {
     const conn = await pool.getConnection();
     try {
@@ -40,7 +39,6 @@ exports.createTeam = async (req, res) => {
     }
 }
 
-// 팀 삭제 API : DELETE  /team/:teamId
 exports.deleteTeam = async (req, res) => {
     try {
         const teamId = req.params.teamId;
@@ -63,7 +61,6 @@ exports.deleteTeam = async (req, res) => {
     }
 };
 
-// 팀원 조회 API : GET  /team/:teamId
 exports.getTeamMembers = async (req, res) => {
     try {
         const teamId = req.params.teamId;
@@ -86,7 +83,6 @@ exports.getTeamMembers = async (req, res) => {
     }
 };
 
-// 팀원 초대 API : POST  /team/:teamId/members
 exports.inviteTeamMember = async (req, res) => {
     const conn = await pool.getConnection();
     try {
@@ -106,7 +102,6 @@ exports.inviteTeamMember = async (req, res) => {
                 message: "초대하려는 유저가 존재하지 않습니다."
             });
         };
-        console.log(checkLoginIdExist);
 
         const [checkUserExistInTeam] = await conn.query(
             'SELECT * FROM user_team WHERE user_id = ? AND team_id = ? FOR UPDATE',
@@ -144,7 +139,6 @@ exports.inviteTeamMember = async (req, res) => {
     }
 }
 
-// 팀원 삭제 API : POST  /team/:teamId/members/:userId
 exports.deleteTeamMember = async (req, res) => {
     try {
         const { teamId, userId } = req.params;

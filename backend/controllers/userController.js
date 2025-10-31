@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// 회원가입 API : GET  /users
 exports.joinUser = async (req, res) => {
     const conn = await pool.getConnection();
     try {
@@ -49,7 +48,6 @@ exports.joinUser = async (req, res) => {
     }
 }
 
-// 로그인 API : GET  /users/login
 exports.loginUser = async (req, res) => {
     try {
         const { loginId, password } = req.body;
@@ -90,7 +88,7 @@ exports.loginUser = async (req, res) => {
             let setLastViewPage = 0;
 
             if (lastViewPage !== 0) {
-                const [userTeamIsEXist] = await pool.query( // lastViewPage가 팀이고 팀이 있으면
+                const [userTeamIsEXist] = await pool.query(
                     `SELECT lastViewPage FROM user u JOIN user_team ut 
                     ON u.lastViewPage = ut.team_id AND u.user_id = ut.user_id
                     WHERE u.user_id = ?`,
@@ -101,7 +99,7 @@ exports.loginUser = async (req, res) => {
                     setLastViewPage = lastViewPage;
                 }
             }
-            console.log(token);
+            
             return res.status(200).json({
                 loginSuccess: true,
                 pwSuccess: true,
@@ -120,7 +118,6 @@ exports.loginUser = async (req, res) => {
     }
 }
 
-// 로그아웃 API : GET  /users/logout
 exports.logoutUser = async (req, res) => {
     try {
         const { userId, lastViewPage } = req.body;
@@ -141,7 +138,6 @@ exports.logoutUser = async (req, res) => {
     }
 }
 
-// 유저가 가진 팀 전체 조회 API : GET  /users/team
 exports.getTeams = async (req, res) => {
     try {
         const userId = req.user.userId;
