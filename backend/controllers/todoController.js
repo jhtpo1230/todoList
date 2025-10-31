@@ -35,7 +35,7 @@ exports.getTodos = async (req, res) => {
     }
 };
 
-// todo 등록 API : POST /users/todos
+// todo 등록 API : POST /todos
 exports.createTodo = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -63,7 +63,7 @@ exports.createTodo = async (req, res) => {
         return res.status(201).json({
             todoId: insertTodoContent.insertId,
             userId: userId,
-            teamId : teamId,
+            teamId: teamId,
             content: todoContent,
             todoComplete: false
         });
@@ -76,7 +76,7 @@ exports.createTodo = async (req, res) => {
     }
 }
 
-// todo 수정 API : UPDATE /users/todos/:todoId
+// todo 수정 API : UPDATE /todos/:todoId
 exports.updateTodo = async (req, res) => {
     try {
         const todoId = req.params.todoId;
@@ -100,7 +100,7 @@ exports.updateTodo = async (req, res) => {
         );
 
         return res.status(200).json({
-            message: `${id} 번째 todoList가 [ ${todoContent} / ${selectedTodoCompleted} ]로 변경되었습니다 !`
+            message: `${todoId} 번째 todoList가 [ ${todoContent} / ${selectedTodoCompleted} ]로 변경되었습니다 !`
         });
 
     } catch (error) {
@@ -112,28 +112,36 @@ exports.updateTodo = async (req, res) => {
     }
 }
 
-// todo 삭제 API : DELETE /users/todos/:todoId
+// todo 삭제 API : DELETE /todos/:todoId
 exports.deleteTodo = async (req, res) => {
+    const conn = await pool.getConnection();
     try {
+        await conn.beginTransaction();
+
         const todoId = req.params.todoId;
-        const [todoContentBeforeDelete] = await pool.query(
-            'SELECT todoContent FROM todo WHERE id = ?',
+        const [todoContentBeforeDelete] = await conn.query(
+            'SELECT todoContent FROM todo WHERE id = ? FOR UPDATE',
             [todoId]
         );
         if (todoContentBeforeDelete.length === 0) {
+            await conn.rollback();
+            conn.release();
             return res.status(404).json({
                 message: "해당 todo가 존재하지 않습니다."
             });
         }
-        await pool.query(
-            'DELETE FROM todo WHERE id = ?',
-            [todoId]
+        await conn.query(
+            'DELETE FROM todo WHERE id = ? LIMIT 1', [todoId]
         );
+        await conn.commit();
+        conn.release();
 
         return res.status(200).json({
             message: `todoList [ ${todoContentBeforeDelete[0].todoContent} ]가 삭제되었습니다 !`
         });
     } catch (error) {
+        await conn.rollback();
+        conn.release();
         console.error(error);
         return res.status(500).json({
             message: "서버 내부에 오류 발생",

@@ -5,12 +5,16 @@ require('dotenv').config();
 
 // 회원가입 API : GET  /users
 exports.joinUser = async (req, res) => {
+    const conn = await pool.getConnection();
     try {
+        await conn.beginTransaction();
         const { loginId, password } = req.body;
-        const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', [loginId]
+        const [checkLoginIdExist] = await conn.query(
+            'SELECT * FROM user WHERE login_id = ? FOR UPDATE', [loginId]
         );
         if (checkLoginIdExist.length > 0) {
+            await conn.rollback();
+            conn.release();
             return res.status(400).json({
                 JoinSuccess: false,
                 message: "이미 존재하는 ID 입니다."
@@ -22,16 +26,21 @@ exports.joinUser = async (req, res) => {
             .pbkdf2Sync(password, salt, 10000, 16, "sha512")
             .toString("base64");
 
-        await pool.query(
+        await conn.query(
             'INSERT INTO user (login_id, password, salt) VALUES (?, ?, ?)',
             [loginId, hashedPassword, salt]
         );
+
+        await conn.commit();
+        conn.release();
 
         return res.status(201).json({
             JoinSuccess: true,
             message: `${loginId} 님 회원가입을 축하드립니다.`
         })
     } catch (error) {
+        await conn.rollback();
+        conn.release();
         console.error(error);
         return res.status(500).json({
             message: "서버 내부에 오류 발생",
@@ -79,7 +88,7 @@ exports.loginUser = async (req, res) => {
             });
 
             let setLastViewPage = 0;
-            
+
             if (lastViewPage !== 0) {
                 const [userTeamIsEXist] = await pool.query( // lastViewPage가 팀이고 팀이 있으면
                     `SELECT lastViewPage FROM user u JOIN user_team ut 
@@ -87,7 +96,7 @@ exports.loginUser = async (req, res) => {
                     WHERE u.user_id = ?`,
                     [userId]
                 );
-        
+
                 if (userTeamIsEXist.length > 0) {
                     setLastViewPage = lastViewPage;
                 }

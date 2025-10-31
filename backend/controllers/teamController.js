@@ -2,29 +2,37 @@ const pool = require('../db/todoListDB');
 
 // 팀 생성 API : POST  /team
 exports.createTeam = async (req, res) => {
+    const conn = await pool.getConnection();
     try {
+        await conn.beginTransaction();
+
         const userId = req.user.userId;
         const { teamName } = req.body;
 
-        const [checkTeamNameExist] = await pool.query(
-            'SELECT * FROM team WHERE team_name = ?', [teamName]
+        const [checkTeamNameExist] = await conn.query(
+            'SELECT * FROM team WHERE team_name = ? FOR UPDATE', [teamName]
         );
         if (checkTeamNameExist.length > 0) {
+            await conn.rollback();
+            conn.release();
             return res.status(400).json({
                 CreateSuccess: false,
                 message: "이미 존재하는 Team 이름입니다."
             });
         }
-        const [teamResult] = await pool.query(
+        const [teamResult] = await conn.query(
             'INSERT INTO team (team_name, creater_id) VALUES (?, ?)',
             [teamName, userId]
         );
 
         const teamId = teamResult.insertId;
-        await pool.query(
+        await conn.query(
             'INSERT INTO user_team (team_id, user_id) VALUES (?, ?)',
             [teamId, userId]
         );
+
+        await conn.commit();
+        conn.release();
 
         return res.status(201).json({
             CreateSuccess: true,
@@ -33,6 +41,8 @@ exports.createTeam = async (req, res) => {
             message: `${teamName} 이 생성되었습니다.`
         })
     } catch (error) {
+        await conn.rollback();
+        conn.release();
         console.error(error);
         return res.status(500).json({
             message: "서버 내부에 오류 발생",
@@ -52,7 +62,7 @@ exports.deleteTeam = async (req, res) => {
         );
 
         return res.status(200).json({
-            message : "팀이 삭제되었습니다.",
+            message: "팀이 삭제되었습니다.",
         });
 
     } catch (error) {
@@ -68,7 +78,7 @@ exports.deleteTeam = async (req, res) => {
 exports.getTeamMembers = async (req, res) => {
     try {
         const teamId = req.params.teamId;
-        
+
         const [teamMembers] = await pool.query(
             `SELECT ut.user_id, u.login_id, ut.team_id 
             FROM user_team ut JOIN user u ON ut.user_id = u.user_id 
@@ -89,14 +99,19 @@ exports.getTeamMembers = async (req, res) => {
 
 // 팀원 초대 API : POST  /team/:teamId/members
 exports.inviteTeamMember = async (req, res) => {
+    const conn = await pool.getConnection();
     try {
+        await conn.beginTransaction();
+
         const teamId = req.params.teamId;
         const { loginId } = req.body;
 
-        const [checkLoginIdExist] = await pool.query(
-            'SELECT * FROM user WHERE login_id = ?', [loginId]
+        const [checkLoginIdExist] = await conn.query(
+            'SELECT * FROM user WHERE login_id = ? FOR UPDATE', [loginId]
         );
         if (checkLoginIdExist.length === 0) {
+            await conn.rollback();
+            conn.release();
             return res.status(400).json({
                 inviteSuccess: false,
                 message: "초대하려는 유저가 존재하지 않습니다."
@@ -104,27 +119,34 @@ exports.inviteTeamMember = async (req, res) => {
         };
         console.log(checkLoginIdExist);
 
-        const [checkUserExistInTeam] = await pool.query(
-            'SELECT * FROM user_team WHERE user_id = ? AND team_id = ?',
+        const [checkUserExistInTeam] = await conn.query(
+            'SELECT * FROM user_team WHERE user_id = ? AND team_id = ? FOR UPDATE',
             [checkLoginIdExist[0].user_id, teamId]
         );
         if (checkUserExistInTeam.length > 0) {
+            await conn.rollback();
+            conn.release();
             return res.status(400).json({
                 inviteSuccess: false,
                 message: `${loginId}는 이미 팀에 가입된 사용자입니다.`
             });
         }
 
-        await pool.query(
+        await conn.query(
             'INSERT INTO user_team (user_id, team_id) VALUES (?, ?)',
             [checkLoginIdExist[0].user_id, teamId]
         );
+
+        await conn.commit();
+        conn.release();
 
         return res.status(201).json({
             inviteSuccess: true,
             message: `${loginId} 님을 팀으로 초대했습니다.`
         })
     } catch (error) {
+        await conn.rollback();
+        conn.release();
         console.error(error);
         return res.status(500).json({
             message: "서버 내부에 오류 발생",
