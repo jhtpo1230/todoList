@@ -9,17 +9,6 @@ exports.createTeam = async (req, res) => {
         const userId = req.user.userId;
         const { teamName } = req.body;
 
-        const [checkTeamNameExist] = await conn.query(
-            'SELECT * FROM team WHERE team_name = ? FOR UPDATE', [teamName]
-        );
-        if (checkTeamNameExist.length > 0) {
-            await conn.rollback();
-            conn.release();
-            return res.status(400).json({
-                CreateSuccess: false,
-                message: "이미 존재하는 Team 이름입니다."
-            });
-        }
         const [teamResult] = await conn.query(
             'INSERT INTO team (team_name, creater_id) VALUES (?, ?)',
             [teamName, userId]
